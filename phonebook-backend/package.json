@@ -1,0 +1,29 @@
+{
+  "name": "part3-ex",
+  "version": "1.0.0",
+  "description": "fullstackopen part 3 exercises",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/T3tje/fullstackopen-part3-ex.git"
+  },
+  "author": "Tilman Drewke",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/T3tje/fullstackopen-part3-ex/issues"
+  },
+  "homepage": "https://github.com/T3tje/fullstackopen-part3-ex#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

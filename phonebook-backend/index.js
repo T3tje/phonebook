@@ -1,13 +1,16 @@
 const { request } = require('express');
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 
-
+app.use(express.static('build'))
+app.use(cors())
 app.use(express.json());
 app.use(morgan('tiny'))
 morgan.token('body', (req,res) => JSON.stringify(req.body))
 app.use(morgan(':body'))
+
 
 let persons = 
 [
@@ -32,7 +35,6 @@ let persons =
       "number": "39-23-6423122"
     }
 ]
-
 const getRandomId = () => {
   let actIds = persons.map(id => id = id.id)
   const randomNumber = Math.floor(Math.random()*3000)
@@ -51,7 +53,8 @@ app.post("/api/persons", (req,res) => {
       error: 'name or number is missing' 
     })
   }
-  if (persons.find(person => person.name = body.name)) {
+  if (persons.find(person => person.name === body.name)) {
+    
     return res.status(400).json({
       error:'name already exists'
     })
@@ -98,7 +101,7 @@ app.delete("/api/persons/:id",(req,res) => {
     res.status(202).send(persons)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

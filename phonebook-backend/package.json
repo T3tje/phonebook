@@ -10,8 +10,7 @@
     "build:ui": "rm -rf build && cd ../phonebook_frontend/ && npm run build && cp -r build ../phonebook-backend/ && cd ../phonebook-backend/",
     "deploy": "git push heroku HEAD:main --force",
     "logs:prod": "heroku logs --tail",
-    "deploy:full": "npm run build:ui && git add -A && git commit -m uibuild && npm run deploy && npm run logs:prod"  
-    
+    "deploy:full": "npm run build:ui && git add -A && git commit -m uibuild && npm run deploy && npm run logs:prod"
   },
   "repository": {
     "type": "git"
@@ -25,6 +24,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.2",
+    "mongoose": "^6.1.3",
     "morgan": "^1.10.0"
   },
   "devDependencies": {

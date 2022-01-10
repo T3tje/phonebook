@@ -21,17 +21,19 @@ const getRandomId = () => {
   }
   return randomNumber
 }
+
 let persons = []
+
 app.get("/api/persons", (req, res) => {
   Person.find({})
     .then(result => {
+      res.json(result)
       persons = result
-      console.log(persons);
-      res.json(persons)
     }) 
+    .catch(error => next(error))
 })
 
-app.post("/api/persons", (req,res) => {
+app.post("/api/persons", (req,res,next) => {
   const body = req.body 
   
   if (!body.name || !body.number) {
@@ -56,33 +58,59 @@ app.post("/api/persons", (req,res) => {
       persons.concat(savedPerson)
       res.json(savedPerson)
     })
-  
+    .catch(error => next(error))
 })
 
-
-
-app.get("/info", (req, res) => {
-    const length = persons.length;
+app.get("/info", (req,res,next) => {
+  Person.find({})
+    .then(result => {
     const date = new Date();
-    res.status(200).send(`<p>Phonebook has info for ${length} people</p><p>${date}</p>`)
+    res.status(200).send(`<p>Phonebook has info for ${result.length} people</p><p>${date}</p>`)
+    })
 })
 
-app.get("/api/persons/:id", (req,res)=> {
-    const id = Number(req.params.id);
-    const note = persons.find(note => note.id === id)
-
-    if (note) {
-        res.json(note)
-    } else {
+app.get("/api/persons/:id", (req,res,next)=> {
+    Person.findById(req.params.id)
+    .then(person => {
+      if (person) {
+        res.json(person)
+      } else {
         res.status(404).end()
-    }
+      }
+    })
+    .catch(error => next(error))
 })
 
-app.delete("/api/persons/:id",(req,res) => {
-    const id = Number(req.params.id)
-    persons = persons.filter(note => note.id !== id)
-    res.status(202).send(persons)
+app.delete("/api/persons/:id",(req,res,next) => {
+    Person.findByIdAndRemove(req.params.id)
+      .then(result => {
+        persons = persons.filter(person => person.name !== result.name);
+        res.status(204).end()
+      })
+      .catch(error => next(error))
+    
 })
+
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  } 
+
+  if (error.name === "ValidationError") {
+    return res.status(400).send({error: error.message})
+  }
+
+  if (error.name === "ReferenceError") {
+    return res.status(503).send({error: error.message})
+  }
+  
+  next(error)
+}
+
+// this has to be the last loaded middleware.
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {

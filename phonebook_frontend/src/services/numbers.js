@@ -23,7 +23,7 @@ const updateNumber = (id, newObject) => {
     return request.then(response => response.data)
 }
 
-
-export default {
+const exportedObject = {
     addAll, addNumber, delNumber, updateNumber
 }
+export default exportedObject
